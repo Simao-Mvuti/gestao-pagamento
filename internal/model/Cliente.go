@@ -11,3 +11,8 @@ type Cliente struct {
 type UpdateClienteInput struct {
 	Contacto string `json:"contacto"`
 }
+
+type Usuario struct {
+	Email string `json:"email"`
+	Senha string `json"senha"`
+}

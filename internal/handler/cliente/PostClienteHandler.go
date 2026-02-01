@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PostClienteHandler(service serve.Repository) gin.HandlerFunc {
+func PostClienteHandler(service *serve.ClienteService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		cliente := model.Cliente{}
 

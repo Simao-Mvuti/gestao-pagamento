@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func DeleteClienteHandler(serve serve.Repository) gin.HandlerFunc {
+func DeleteClienteHandler(serve *serve.ClienteService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		input, ok := ctx.Params.Get("id")
 		id, err := strconv.Atoi(input)

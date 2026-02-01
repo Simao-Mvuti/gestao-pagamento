@@ -8,12 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetsClientesHandler(serve serve.Repository) gin.HandlerFunc {
+func GetsClientesHandler(serve *serve.ClienteService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		clientes, err := serve.BuscarClientes()
 
 		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"estado": "erro", "mensagem": err.Error()})
+			ctx.JSON(http.StatusNotFound, gin.H{"estado": "erro", "mensagem": err.Error()})
 			return
 		}
 
@@ -21,7 +21,7 @@ func GetsClientesHandler(serve serve.Repository) gin.HandlerFunc {
 	}
 }
 
-func GetsClienteHandler(serve serve.Repository) gin.HandlerFunc {
+func GetsClienteHandler(serve *serve.ClienteService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		input, ok := ctx.Params.Get("id")
 		id, err := strconv.Atoi(input)
@@ -38,7 +38,7 @@ func GetsClienteHandler(serve serve.Repository) gin.HandlerFunc {
 
 		cliente, err := serve.BuscarClienteID(id)
 		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"estado": "erro", "mensagem": err.Error()})
+			ctx.JSON(http.StatusNotFound, gin.H{"estado": "erro", "mensagem": err.Error()})
 			return
 		}
 

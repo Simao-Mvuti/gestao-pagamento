@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PutClienteHandler(serve serve.Repository) gin.HandlerFunc {
+func PutClienteHandler(serve *serve.ClienteService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		input, ok := ctx.Params.Get("id")
 		var contacto model.UpdateClienteInput
