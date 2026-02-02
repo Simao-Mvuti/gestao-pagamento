@@ -29,9 +29,10 @@ func main() {
 	c.POST("/login", handlerUsuario.Login(usuarioService))
 
 	clienteRoute := c.Group("/cliente")
+	clienteRoute.Use(middleware.AuthMiddleware())
 	{
-		clienteRoute.DELETE("/:id", middleware.AuthMiddleware(), handlerCliente.DeleteClienteHandler(clienteService))
-		clienteRoute.PUT("/:id", middleware.AuthMiddleware(), handlerCliente.PutClienteHandler(clienteService))
+		clienteRoute.DELETE("/:id", handlerCliente.DeleteClienteHandler(clienteService))
+		clienteRoute.PUT("/:id", handlerCliente.PutClienteHandler(clienteService))
 		clienteRoute.GET("/:id", handlerCliente.GetsClienteHandler(clienteService))
 		clienteRoute.POST("/", handlerCliente.PostClienteHandler(clienteService))
 		clienteRoute.GET("/", handlerCliente.GetsClientesHandler(clienteService))

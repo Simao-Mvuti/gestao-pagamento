@@ -3,8 +3,8 @@ package repository
 import (
 	"database/sql"
 	"errors"
+	"gestao/internal/middleware"
 	"gestao/internal/model"
-	"os"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -49,7 +49,8 @@ func (r *SqliteUsuarioRepository) Logar(input model.Usuario) (string, error) {
 		return "", errors.New("credenciais inválidas")
 	}
 
-	// retornar token (pode ser temporário por enquanto)
-	return os.Getenv("TOKEN"), nil
+	token, _ := middleware.GerarToken(interno.ID)
+
+	return token, nil
 
 }

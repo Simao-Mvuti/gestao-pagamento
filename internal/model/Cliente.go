@@ -13,6 +13,12 @@ type UpdateClienteInput struct {
 }
 
 type Usuario struct {
+	ID    string `json:"user_id"`
 	Email string `json:"email"`
 	Senha string `json"senha"`
+}
+
+type UsuarioLogin struct {
+	Email string `json:"email"`
+	Senha string `json:"senha"`
 }
