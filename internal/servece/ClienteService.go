@@ -23,18 +23,18 @@ func (re *ClienteService) CadastrarCliente(cliente model.Cliente) error {
 	return re.Re.CadastrarCliente(cliente)
 }
 
-func (re *ClienteService) BuscarClientes() ([]model.Cliente, error) {
-	return re.Re.BuscarClientes()
+func (re *ClienteService) BuscarClientes(userID string) ([]model.Cliente, error) {
+	return re.Re.BuscarClientes(userID)
 }
 
-func (re *ClienteService) BuscarClienteID(index int) (model.Cliente, error) {
-	return re.Re.BuscarClienteID(index)
+func (re *ClienteService) BuscarClienteID(ids model.IDs) (model.Cliente, error) {
+	return re.Re.BuscarClienteID(ids)
 }
 
-func (re *ClienteService) DeletarCliente(index int) error {
-	return re.Re.DeletarCliente(index)
+func (re *ClienteService) DeletarCliente(ids model.IDs) error {
+	return re.Re.DeletarCliente(ids)
 }
 
-func (re *ClienteService) AlterarCliente(index int, input model.UpdateClienteInput) error {
-	return re.Re.AlterarCliente(index, input)
+func (re *ClienteService) AlterarCliente(ids model.IDs, input model.UpdateClienteInput) error {
+	return re.Re.AlterarCliente(ids, input)
 }

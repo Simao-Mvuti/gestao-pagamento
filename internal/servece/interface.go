@@ -4,10 +4,10 @@ import "gestao/internal/model"
 
 type ClienteRepository interface {
 	CadastrarCliente(cliente model.Cliente) error
-	BuscarClientes() ([]model.Cliente, error)
-	BuscarClienteID(index int) (model.Cliente, error)
-	DeletarCliente(index int) error
-	AlterarCliente(index int, input model.UpdateClienteInput) error
+	BuscarClientes(userID string) ([]model.Cliente, error)
+	BuscarClienteID(ids model.IDs) (model.Cliente, error)
+	DeletarCliente(ids model.IDs) error
+	AlterarCliente(ids model.IDs, input model.UpdateClienteInput) error
 }
 
 type UsuarioRepository interface {

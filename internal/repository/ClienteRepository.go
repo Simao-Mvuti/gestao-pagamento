@@ -16,23 +16,42 @@ func NewClienteRepository(db *sql.DB) *SqliteClienteRepository {
 }
 
 func (r *SqliteClienteRepository) CadastrarCliente(cliente model.Cliente) error {
-	query := "INSERT INTO clientes (nome, contacto) VALUES (?,?)"
-	_, err := r.DB.Exec(query, cliente.Nome, cliente.Contacto)
-	if err != nil {
-		return err
-	}
-	return nil
+	query := `
+		INSERT INTO clientes (nome, contacto, user_id)
+		VALUES (?, ?, ?)
+	`
+
+	_, err := r.DB.Exec(
+		query,
+		cliente.Nome,
+		cliente.Contacto,
+		cliente.UserID,
+	)
+
+	return err
 }
 
-func (r *SqliteClienteRepository) BuscarClienteID(index int) (model.Cliente, error) {
-	query := "SELECT id,nome,contacto FROM clientes WHERE id = ?"
-	var cliente model.Cliente
-	rows := r.DB.QueryRow(query, index)
+func (r *SqliteClienteRepository) BuscarClienteID(ids model.IDs) (model.Cliente, error) {
 
-	err := rows.Scan(
+	query := `
+		SELECT id, nome, contacto, user_id
+		FROM clientes
+		WHERE id = ? AND user_id = ?
+	`
+
+	var cliente model.Cliente
+
+	row := r.DB.QueryRow(
+		query,
+		ids.ClienteId,
+		ids.UserID,
+	)
+
+	err := row.Scan(
 		&cliente.ID,
 		&cliente.Nome,
 		&cliente.Contacto,
+		&cliente.UserID,
 	)
 
 	if err != nil {
@@ -40,19 +59,22 @@ func (r *SqliteClienteRepository) BuscarClienteID(index int) (model.Cliente, err
 	}
 
 	return cliente, nil
-
 }
+func (r *SqliteClienteRepository) BuscarClientes(userID string) ([]model.Cliente, error) {
 
-func (r *SqliteClienteRepository) BuscarClientes() ([]model.Cliente, error) {
-	query := "SELECT id, nome, contacto FROM clientes"
+	query := `
+		SELECT id, nome, contacto, user_id
+		FROM clientes
+		WHERE user_id = ?
+	`
 
-	rows, err := r.DB.Query(query)
+	rows, err := r.DB.Query(query, userID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	clientes := []model.Cliente{}
+	var clientes []model.Cliente
 
 	for rows.Next() {
 		var c model.Cliente
@@ -61,7 +83,9 @@ func (r *SqliteClienteRepository) BuscarClientes() ([]model.Cliente, error) {
 			&c.ID,
 			&c.Nome,
 			&c.Contacto,
+			&c.UserID,
 		)
+
 		if err != nil {
 			return nil, err
 		}
@@ -72,20 +96,39 @@ func (r *SqliteClienteRepository) BuscarClientes() ([]model.Cliente, error) {
 	return clientes, nil
 }
 
-func (r *SqliteClienteRepository) AlterarCliente(index int, input model.UpdateClienteInput) error {
-	query := "UPDATE clientes SET contacto = ? WHERE id = ?"
-	if _, err := r.DB.Exec(query, input.Contacto, index); err != nil {
-		return err
-	}
+func (r *SqliteClienteRepository) AlterarCliente(
+	ids model.IDs,
+	input model.UpdateClienteInput,
+) error {
 
-	return nil
+	query := `
+		UPDATE clientes
+		SET contacto = ?
+		WHERE id = ? AND user_id = ?
+	`
+
+	_, err := r.DB.Exec(
+		query,
+		input.Contacto,
+		ids.ClienteId,
+		ids.UserID,
+	)
+
+	return err
 }
 
-func (r *SqliteClienteRepository) DeletarCliente(index int) error {
-	query := "DELETE FROM clientes WHERE id = ?"
-	if _, err := r.DB.Exec(query, index); err != nil {
-		return err
-	}
+func (r *SqliteClienteRepository) DeletarCliente(ids model.IDs) error {
 
-	return nil
+	query := `
+		DELETE FROM clientes
+		WHERE id = ? AND user_id = ?
+	`
+
+	_, err := r.DB.Exec(
+		query,
+		ids.ClienteId,
+		ids.UserID,
+	)
+
+	return err
 }

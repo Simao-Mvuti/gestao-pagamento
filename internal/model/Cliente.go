@@ -4,6 +4,17 @@ type Cliente struct {
 	ID       int    `json:"id"`
 	Nome     string `json:"nome"`
 	Contacto string `json:"contacto"`
+	UserID   string `json:"user_id"`
+}
+
+type ClienteInput struct {
+	Nome     string `json:"nome"`
+	Contacto string `json:"contacto"`
+}
+
+type IDs struct {
+	UserID    string
+	ClienteId int
 }
 
 //Adicionar opcao de ativo e desativado para excluir

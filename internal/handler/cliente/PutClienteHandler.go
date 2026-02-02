@@ -11,19 +11,26 @@ import (
 
 func PutClienteHandler(serve *serve.ClienteService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		input, ok := ctx.Params.Get("id")
+		id, ok := ctx.Params.Get("id")
+		userID, ok := ctx.Get("ser_id")
+
+		clienteId, err := strconv.Atoi(id)
+
+		if !ok || err != nil || clienteId < 0 {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"estado": "erro", "mensagem": "id inválido"})
+			return
+		}
+
 		var contacto model.UpdateClienteInput
 		if err := ctx.ShouldBindJSON(&contacto); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"estado": "erro", "mensagem": err.Error()})
 			return
 		}
-		id, err := strconv.Atoi(input)
-		if !ok || err != nil || id < 0 {
-			ctx.JSON(http.StatusBadRequest, gin.H{"estado": "erro", "mensagem": err.Error()})
-			return
-		}
 
-		if err = serve.AlterarCliente(id, contacto); err != nil {
+		if err = serve.AlterarCliente(model.IDs{
+			ClienteId: clienteId,
+			UserID:    userID.(string),
+		}, contacto); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"estado": "erro", "mensagem": err.Error()})
 			return
 		}

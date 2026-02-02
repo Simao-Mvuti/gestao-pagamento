@@ -9,6 +9,8 @@ import (
 
 var apiKey = []byte(os.Getenv("KEY_TOKEN"))
 
+const USER_ID string = "user_id"
+
 type claims struct {
 	UserId string `json:"user_id"`
 	jwt.RegisteredClaims
