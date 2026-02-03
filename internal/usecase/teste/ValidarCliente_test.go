@@ -7,24 +7,34 @@ import (
 )
 
 func testValidarCliente(t *testing.T) {
-	clienteUm := model.Cliente{
-		Nome:     "si1",
-		Contacto: "926387504",
+	validar := func(t *testing.T, resposta bool, esperado bool) {
+		t.Helper()
+
+		if resposta != esperado {
+			t.Errorf("Resposta %t, Mas esperava %t", resposta, esperado)
+		}
+
 	}
 
-	clienteDois := model.Cliente{
-		Nome:     "Simao",
-		Contacto: "926387504",
-	}
+	t.Run("Testando com dados validos", func(t *testing.T) {
+		resposta := usecase.ValidarCliente(model.Cliente{
+			Nome:     "Simao",
+			Contacto: "926387504",
+		})
 
-	res := usecase.ValidarCliente(clienteUm)
-	resDois := usecase.ValidarCliente(clienteDois)
+		esperado := true
+		validar(t, resposta, esperado)
 
-	if !res {
-		t.Error()
-	}
+	})
 
-	if !resDois {
-		t.Error()
-	}
+	t.Run("Testando com dados invalidos", func(t *testing.T) {
+		resposta := usecase.ValidarCliente(model.Cliente{
+			Nome:     "Si@mao?",
+			Contacto: "92fv87504",
+		})
+
+		esperado := false
+		validar(t, resposta, esperado)
+
+	})
 }

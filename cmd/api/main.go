@@ -7,6 +7,7 @@ import (
 	"gestao/internal/repository"
 	serve "gestao/internal/servece"
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -18,7 +19,7 @@ func main() {
 		log.Fatal("Erro ao carregar .env")
 
 	}
-
+	porta := os.Getenv("PORT")
 	c := gin.Default()
 
 	db := repository.Connect()
@@ -46,5 +47,8 @@ func main() {
 		clienteRoute.GET("/", handlerCliente.GetsClientesHandler(clienteService))
 	}
 
-	c.Run(":8080")
+	if porta == "" {
+		porta = "8080"
+	}
+	c.Run(":" + porta)
 }

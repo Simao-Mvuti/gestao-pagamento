@@ -6,17 +6,22 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func Usuario(serve *serve.UsuarioService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var usuario model.Usuario
+		var usuario model.UsuarioDTO
 		if err := ctx.ShouldBindJSON(&usuario); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"estado": "erro", "mensagem": err.Error()})
 			return
 		}
 
-		if err := serve.CriarConta(usuario); err != nil {
+		if err := serve.CriarConta(model.Usuario{
+			ID:    uuid.NewString(),
+			Email: usuario.Email,
+			Senha: usuario.Senha,
+		}); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"estado": "erro", "mensagem": err.Error()})
 			return
 		}
@@ -28,7 +33,7 @@ func Usuario(serve *serve.UsuarioService) gin.HandlerFunc {
 
 func Login(serve *serve.UsuarioService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var usuario model.UsuarioLogin
+		var usuario model.UsuarioDTO
 		if err := ctx.ShouldBindJSON(&usuario); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"estado": "erro", "mensagem": err.Error()})
 			return

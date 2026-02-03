@@ -36,7 +36,7 @@ type Usuario struct {
 	Senha string `json"senha"`
 }
 
-type UsuarioLogin struct {
+type UsuarioDTO struct {
 	Email string `json:"email"`
 	Senha string `json:"senha"`
 }
