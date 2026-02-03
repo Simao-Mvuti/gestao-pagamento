@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"gestao/internal/middleware"
 	"gestao/internal/model"
 	serve "gestao/internal/servece"
 	"net/http"
@@ -12,7 +13,7 @@ import (
 func DeleteClienteHandler(serve *serve.ClienteService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		input, ok := ctx.Params.Get("id")
-		userID, ok := ctx.Get("ser_id")
+		userID, ok := ctx.Get(middleware.USER_ID)
 
 		clienteId, err := strconv.Atoi(input)
 

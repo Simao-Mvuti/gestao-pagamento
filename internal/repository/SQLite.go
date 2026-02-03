@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"os"
 
 	"log"
 
@@ -9,7 +10,13 @@ import (
 )
 
 func Connect() *sql.DB {
-	db, err := sql.Open("sqlite3", "/home/simao/Desktop/codigo/gestao/store/banco.db")
+	pathBanco := os.Getenv("DB_PATH")
+
+	if pathBanco == "" {
+		log.Fatal("DB_PATH vazia")
+	}
+
+	db, err := sql.Open("sqlite3", pathBanco)
 
 	if err != nil {
 		log.Fatal("Erro ao abrir o banco:", err)

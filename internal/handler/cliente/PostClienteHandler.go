@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"gestao/internal/middleware"
 	"gestao/internal/model"
 	serve "gestao/internal/servece"
 	"net/http"
@@ -10,10 +11,10 @@ import (
 
 func PostClienteHandler(service *serve.ClienteService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		cliente := model.ClienteInput{}
-		userID, ok := ctx.Get("ser_id")
+		cliente := model.ClienteDTO{}
+		userID, ok := ctx.Get(middleware.USER_ID)
 
-		if !ok {
+		if !ok || userID == "" {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"estado": "erro", "mensagem": "id inválido"})
 			return
 		}

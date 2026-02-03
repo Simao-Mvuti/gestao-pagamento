@@ -6,11 +6,19 @@ import (
 	"gestao/internal/middleware"
 	"gestao/internal/repository"
 	serve "gestao/internal/servece"
+	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Erro ao carregar .env")
+
+	}
+
 	c := gin.Default()
 
 	db := repository.Connect()

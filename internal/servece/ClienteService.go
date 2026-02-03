@@ -23,12 +23,28 @@ func (re *ClienteService) CadastrarCliente(cliente model.Cliente) error {
 	return re.Re.CadastrarCliente(cliente)
 }
 
-func (re *ClienteService) BuscarClientes(userID string) ([]model.Cliente, error) {
-	return re.Re.BuscarClientes(userID)
+func (re *ClienteService) BuscarClientes(userID string) ([]model.ClienteDTO, error) {
+	var clientesDto []model.ClienteDTO
+	clientes, err := re.Re.BuscarClientes(userID)
+	if err != nil {
+		return []model.ClienteDTO{}, err
+	}
+
+	for _, cliente := range clientes {
+		clientesDto = append(clientesDto, model.ToClienteDTO(cliente))
+	}
+
+	return clientesDto, nil
 }
 
-func (re *ClienteService) BuscarClienteID(ids model.IDs) (model.Cliente, error) {
-	return re.Re.BuscarClienteID(ids)
+func (re *ClienteService) BuscarClienteID(ids model.IDs) (model.ClienteDTO, error) {
+	cliente, err := re.Re.BuscarClienteID(ids)
+	if err != nil {
+		return model.ClienteDTO{}, err
+	}
+
+	return model.ToClienteDTO(cliente), nil
+
 }
 
 func (re *ClienteService) DeletarCliente(ids model.IDs) error {

@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -11,9 +12,10 @@ import (
 func AuthMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		authHeader := ctx.GetHeader("Authorization")
+		secret := os.Getenv("JWT_SECRET")
 
-		if authHeader == "" {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"estado": "erro", "mensagem": "token inexistente"})
+		if authHeader == "" || secret == "" {
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"estado": "erro", "mensagem": "token em branco"})
 			return
 		}
 
@@ -31,7 +33,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, jwt.ErrSignatureInvalid
 			}
-			return apiKey, nil
+			return []byte(secret), nil
 		})
 
 		if err != nil || !token.Valid {
@@ -40,8 +42,8 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			userID := claims["user_id"]
-			ctx.Set("user_id", userID)
+			userID := claims[USER_ID]
+			ctx.Set(USER_ID, userID)
 		} else {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"estado": "erro", "mensagem": "falha ao processar claims"})
 			return

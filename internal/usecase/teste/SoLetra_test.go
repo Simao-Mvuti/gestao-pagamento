@@ -5,15 +5,29 @@ import (
 	"testing"
 )
 
-func testeSoLetras(t *testing.T) {
-	texto := "samuel"
-	texto2 := "samuel123"
-
-	if !usecase.SoLetras(texto) {
-		t.Error()
+func TestSoLetras(t *testing.T) {
+	verificarResultado := func(t *testing.T, resultado bool, esperado bool) {
+		t.Helper()
+		if resultado != esperado {
+			t.Errorf("Resultado %t ,Esperado %t", resultado, esperado)
+		}
 	}
 
-	if usecase.SoLetras(texto2) {
-		t.Error()
-	}
+	t.Run("Testanto com Letras apenas", func(t *testing.T) {
+		resultado := usecase.SoLetras("samuel")
+		esperado := true
+		verificarResultado(t, resultado, esperado)
+	})
+
+	t.Run("Testando Com letras e numero", func(t *testing.T) {
+		resultado := usecase.SoLetras("samuel123")
+		esperado := false
+		verificarResultado(t, resultado, esperado)
+	})
+
+	t.Run("Com simbolos e letras", func(t *testing.T) {
+		resultado := usecase.SoLetras("S@muel?")
+		esperado := false
+		verificarResultado(t, resultado, esperado)
+	})
 }

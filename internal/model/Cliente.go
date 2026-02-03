@@ -7,14 +7,21 @@ type Cliente struct {
 	UserID   string `json:"user_id"`
 }
 
-type ClienteInput struct {
-	Nome     string `json:"nome"`
-	Contacto string `json:"contacto"`
+type ClienteDTO struct {
+	Nome     string `json:"nome" binding:"required,min=9`
+	Contacto string `json:"contacto" binding:"required,min=2`
 }
 
 type IDs struct {
 	UserID    string
 	ClienteId int
+}
+
+func ToClienteDTO(cliente Cliente) ClienteDTO {
+	return ClienteDTO{
+		Nome:     cliente.Nome,
+		Contacto: cliente.Contacto,
+	}
 }
 
 //Adicionar opcao de ativo e desativado para excluir
